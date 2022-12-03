@@ -40,15 +40,16 @@ void Scene::draw(void){
     /**
      * TODO: (HW3 hint: you should do something here)
      */
+    matrix_stack.push(cur_VM); // thing i put here////////////////////////////////
     
     // Compute total number of connectivities in the graph; this would be an upper bound for
     // the stack size in the depth first search over the directed acyclic graph
     int total_number_of_edges = 0; 
     for ( const auto &n : node ) total_number_of_edges += n.second->childnodes.size();
     
-    // If you want to print some statistics of your scene graph
-    // std::cout << "total numb of nodes = " << node.size() << std::endl;
-    // std::cout << "total number of edges = " << total_number_of_edges << std::endl;
+    // If you want to print some statistics of your scene graph  -- sure why not
+    std::cout << "total numb of nodes = " << node.size() << std::endl;
+    std::cout << "total number of edges = " << total_number_of_edges << std::endl;
     
     while( ! dfs_stack.empty() ){
         // Detect whether the search runs into infinite loop by checking whether the stack is longer than the number of edges in the graph.
@@ -62,6 +63,7 @@ void Scene::draw(void){
         /**
          * TODO: (HW3 hint: you should do something here)
          */
+        cur_VM = matrix_stack.top(); matrix_stack.pop(); ////////////////////////////////////////////////////////////
         
         // draw all the models at the current node
         for ( size_t i = 0; i < cur -> models.size(); i++ ){
@@ -71,7 +73,7 @@ void Scene::draw(void){
              * TODO: (HW3 hint: you should do something here)
              */
 
-            shader -> modelview = cur_VM; // TODO: HW3: Without updating cur_VM, modelview would just be camera's view matrix.
+            shader -> modelview = cur_VM * (cur -> modeltransforms[i]); // TODO: HW3: Without updating cur_VM, modelview would just be camera's view matrix.
             shader -> material  = ( cur -> models[i] ) -> material;
             
             // The draw command
@@ -85,6 +87,7 @@ void Scene::draw(void){
             /**
              * TODO: (HW3 hint: you should do something here)
              */
+            matrix_stack.push(cur_VM * (cur->childtransforms[i]));
         }
         
     } // End of DFS while loop.
