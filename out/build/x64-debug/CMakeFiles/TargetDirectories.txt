@@ -1,0 +1,5 @@
+C:/Users/swkha/Documents/GitHub/cse167_final/out/build/x64-debug/CMakeFiles/ModelViewer.dir
+C:/Users/swkha/Documents/GitHub/cse167_final/out/build/x64-debug/CMakeFiles/CopyShaders.dir
+C:/Users/swkha/Documents/GitHub/cse167_final/out/build/x64-debug/CMakeFiles/CopyModels.dir
+C:/Users/swkha/Documents/GitHub/cse167_final/out/build/x64-debug/CMakeFiles/edit_cache.dir
+C:/Users/swkha/Documents/GitHub/cse167_final/out/build/x64-debug/CMakeFiles/rebuild_cache.dir
