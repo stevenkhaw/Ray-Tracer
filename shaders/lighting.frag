@@ -32,6 +32,40 @@ void main (void){
     } else {
         
         // HW3: You will compute the lighting here.
-        
+
+        //lets convert everything into our camera coordinates
+        vec3 lj ;
+        vec4 camPos = modelview * position;
+        //to get vector towards camera, we do xcamPos = ((0,0,0,1) - camPos).xyz  this vector then needs to be normalized
+        vec3 v = normalize(vec4(0,0,0,1) - camPos).xyz;
+        //normalize... this is probably the source of issues because we really only need to invert and transpose over the inner 3x3 matrix
+        vec3 n = normalize(transpose(inverse(mat3(modelview))) * normalize(normal));
+
+
+        //we are going to do a loop, where each iteration goes over one light
+        vec4 total = vec4(0, 0 , 0, 0);
+        vec4 iterationSum; 
+
+        for(int i = 0; i < nlights; i++){
+            // only care about xyz components of lj
+            vec4 test = vec4(0,0,0,1);
+            vec4 lgb = view*lightpositions[i];
+            lj = normalize(test.w*lgb.xyz - lgb.w*test.xyz).xyz ;
+            iterationSum =  vec4(0, 0 , 0, 0);
+
+            //ambient
+            iterationSum += ambient;
+
+            //diffuse
+            iterationSum += diffuse * max(dot(n, lj),0);
+
+            //specular
+            iterationSum += specular*pow(max(dot(n, normalize(v+lj)),0),shininess);
+
+            //all together, we multiply this by the light color
+            total += iterationSum * lightcolors[i];
+        }
+        total += emision;
+        fragColor = total;
     }
 }
