@@ -16,7 +16,7 @@ class Camera {
 public:
     glm::vec3 eye;// position of the eye
     glm::vec3 target;  // look at target
-    glm::vec3 up;      // up vector
+    glm::vec3 up;      // up vector 
     float fovy;  // field of view in degrees
     float aspect; // aspect ratio
     float zNear; // near clipping distance
