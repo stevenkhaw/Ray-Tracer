@@ -8,13 +8,16 @@
 #include "Screenshot.h"
 #include "Scene.h"
 #include "Image.h"
+#include "RTScene.h"
+#include "RayTracer.h"
 
 
 static int width = 800;
 static int height = 600;
 static const char* title = "Scene viewer";
 static const glm::vec4 background(0.1f, 0.2f, 0.3f, 1.0f);
-static Scene scene;
+//static Scene scene;
+static RTScene scene;
 
 static Image image(width, height);
 
@@ -47,6 +50,9 @@ void initialize(void){
     // Initialize image
     image.init();
 
+    // fill image with raytracer rgb
+    RayTracer::Raytrace(*scene.camera, scene, image);
+
     // Enable depth test
     glEnable(GL_DEPTH_TEST);
 }
@@ -54,7 +60,7 @@ void initialize(void){
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     
-    scene.draw();
+    scene.buildTriangleSoup();
     //image.draw();
     
     glutSwapBuffers();

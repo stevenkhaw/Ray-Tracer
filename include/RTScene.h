@@ -20,10 +20,12 @@
 #include "Material.h"
 #include "Model.h"
 #include "Triangle.h"
+#include "Scene.h"
 
 #ifndef __RTSCENE_H__
 #define __RTSCENE_H__
 
+/*
 class Node {
 public:
     std::vector< Node* > childnodes;
@@ -31,6 +33,7 @@ public:
     std::vector< Model* > models;
     std::vector< glm::mat4 > modeltransforms;
 };
+*/
 
 class RTScene {
 public:

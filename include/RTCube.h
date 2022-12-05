@@ -50,44 +50,21 @@ public:
             20, 21, 22, 20, 22, 23 // Bottom face
         };
 
-        for(int i = 0; int < positions.length(); i+=3){
+        for(int i = 0; i < 24; i+=3){
             Triangle temp;
-            temp.P.push_back(glm::vec3(positions[indices[i]]));
-			temp.P.push_back(glm::vec3(positions[indices[i+1]]));
-			temp.P.push_back(glm::vec3(positions[indices[i+2]]));
+            temp.P.push_back(glm::vec3(positions[indices[i]][0], positions[indices[i]][1], positions[indices[i]][2]));
+			temp.P.push_back(glm::vec3(positions[indices[i+1]][0], positions[indices[i+1]][1], positions[indices[i+1]][2]));
+			temp.P.push_back(glm::vec3(positions[indices[i+2]][0], positions[indices[i+2]][1], positions[indices[i+2]][2]));
 
-			temp.P.push_back(glm::vec3(normals[indices[i]]));
-			temp.P.push_back(glm::vec3(normals[indices[i + 1]]));
-			temp.P.push_back(glm::vec3(normals[indices[i + 2]]));
+			temp.P.push_back(glm::vec3(normals[indices[i]][0], normals[indices[i]][1], normals[indices[i]][2]));
+			temp.P.push_back(glm::vec3(normals[indices[i]][0], normals[indices[i+1]][1], normals[indices[i+1]][2]));
+			temp.P.push_back(glm::vec3(normals[indices[i]][0], normals[indices[i+2]][1], normals[indices[i+2]][2]));
 
             count++;
 
             elements.push_back(temp);
         }
-
-        glGenVertexArrays(1, &vao );
-        buffers.resize(3); // recall that buffers is std::vector<GLuint>
-        glGenBuffers(3, buffers.data());
-        glBindVertexArray(vao);
-        
-        // 0th attribute: position
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
-        
-        // 1st attribute: normal
-        glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(normals), normals, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,(void*)0);
-        
-        // indices
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[2]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-        
         count = sizeof(indices)/sizeof(indices[0]);
-        glBindVertexArray(0);
     }
     
     

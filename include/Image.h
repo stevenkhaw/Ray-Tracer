@@ -9,6 +9,9 @@
 #include <math.h>
 #include <glm/glm.hpp>
 
+#ifndef __IMAGE__
+#define __IMAGE__
+
 class Image {
 public:
     int width;
@@ -27,3 +30,5 @@ private:
     unsigned int fbo; // Frame buffer
     unsigned int tbo; // Texture buffer
 };
+
+#endif

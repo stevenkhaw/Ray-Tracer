@@ -4,7 +4,7 @@ void Image::init() {
     this->pixels = std::vector<glm::vec3>(this->width * this->height);
     glGenFramebuffers(1, &fbo);
     glGenTextures(1, &tbo);
-    testAddColor();
+    //testAddColor();
 }
 
 void Image::draw() {

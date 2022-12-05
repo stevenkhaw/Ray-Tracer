@@ -8,10 +8,10 @@ Scene.inl contains the definition of the scene graph
 using namespace glm;
 void RTScene::init(void) {
     // Create a geometry palette
-    geometry["cube"] = new Cube;
-    geometry["teapot"] = new Obj;
-    geometry["bunny"] = new Obj;
-    geometry["cube"]->init();
+    geometry["RTRTCube"] = new RTCube;
+    geometry["teapot"] = new RTObj;
+    geometry["bunny"] = new RTObj;
+    geometry["RTRTRTCube"]->init();
     geometry["teapot"]->init("models/teapot.obj");
     geometry["bunny"]->init("models/bunny.obj");
 
@@ -55,13 +55,13 @@ void RTScene::init(void) {
     model["teapot2"]->geometry = geometry["teapot"];
     model["teapot2"]->material = material["ceramic"];
     model["table piece"] = new Model;
-    model["table piece"]->geometry = geometry["cube"];
+    model["table piece"]->geometry = geometry["RTRTRTCube"];
     model["table piece"]->material = material["wood"];
     model["bunny"] = new Model;
     model["bunny"]->geometry = geometry["bunny"];
     model["bunny"]->material = material["turquoise"];
     model["bulb"] = new Model;
-    model["bulb"]->geometry = geometry["cube"];
+    model["bulb"]->geometry = geometry["RTRTRTCube"];
     model["bulb"]->material = material["bulb"];
 
     // Create a light palette
