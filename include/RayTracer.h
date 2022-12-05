@@ -58,7 +58,7 @@ namespace RayTracer {
 
 		for (int i = 0; i < scene->triangle_soup.size(); i++) { // Find closest intersection; test all objects
 
-			Triangle* currTriangle = &scene->triangle_soup[i];
+			Triangle* currTriangle = scene->triangle_soup[i];
 
 			Intersection hit_temp = Intersect(ray, currTriangle);
 
