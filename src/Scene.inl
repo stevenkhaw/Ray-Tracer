@@ -1,6 +1,8 @@
+
 /**************************************************
 Scene.inl contains the definition of the scene graph
 *****************************************************/
+/*
 #include "Scene.h"
 #include "Cube.h"
 #include "Obj.h"
@@ -132,3 +134,5 @@ void Scene::init(void){
     glUseProgram(shader -> program);
     shader -> initUniforms();
 }
+
+*/

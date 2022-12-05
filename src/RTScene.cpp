@@ -56,32 +56,25 @@ void RTScene::buildTriangleSoup() {
         // top-pop the stacks
         cur = dfs_stack.top();  dfs_stack.pop();
         cur_VM = matrix_stack.top(); matrix_stack.pop();
-
+        
         // draw all the models at the current node
-        for (size_t i = 0; i < cur->models.size(); i++) {
 
-			mat4 modelview = cur_VM * (cur->modeltransforms[i]);
+        for (int i = 0; i < cur->models.size(); i++) {
+            mat4 modelview = cur_VM * (cur->modeltransforms[i]);
 
-            //transform all triangles in the current model 
-            for (int j = 0; j < cur->models->geometry->count; j++) {
+            for (int j = 0; j < cur->models[i]->geometry->count; j++) {
+                Triangle *currTriangle = cur->models[i]->geometry->elements[j];
 
-                std::vector<Triangle> currTriangle = cur->models->geometry->elements[j];
-
-                //transform all points in the current triangle
-                for (k = 0; k < 3; k++) {
-
-                    // position
-                    currTriangle->P[k] = modelview * currTriangle->P[k];
-                    // normal
+                for (int k = 0; k < 3; k++) {
+                                        //      cast as vec4, transform                  homogenize
+                    currTriangle->P[k] = (modelview * vec4(currTriangle->P[k])).xyz / (modelview * vec4(currTriangle->P[k])).w;
                     currTriangle->N[k] = normalize(transpose(inverse(modelview)) * currTriangle->N[k]);
                 }
 
-                //assign material to triangle
                 currTriangle->material = (cur->models[i])->material;
 
-                //add the triangle to our big, scene-wide triangle soup  
                 this->triangle_soup.push_back(currTriangle);
-            }   
+            }
         }
 
         // Continue the DFS: put all the child nodes of the current node in the stack

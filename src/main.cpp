@@ -6,7 +6,7 @@
 #define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 #include "Screenshot.h"
-#include "Scene.h"
+//#include "Scene.h"
 #include "Image.h"
 #include "RTScene.h"
 #include "RayTracer.h"
@@ -17,7 +17,7 @@ static int height = 600;
 static const char* title = "Scene viewer";
 static const glm::vec4 background(0.1f, 0.2f, 0.3f, 1.0f);
 //static Scene scene;
-static RTScene scene;
+static RTScene scene = *(new RTScene());
 
 static Image image(width, height);
 
@@ -51,7 +51,7 @@ void initialize(void){
     image.init();
 
     // fill image with raytracer rgb
-    RayTracer::Raytrace(*scene.camera, scene, image);
+    RayTracer::Raytrace(scene.camera, &scene, image);
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);

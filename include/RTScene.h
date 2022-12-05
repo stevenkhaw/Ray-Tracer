@@ -20,12 +20,11 @@
 #include "Material.h"
 #include "Model.h"
 #include "Triangle.h"
-#include "Scene.h"
+//#include "Scene.h"
 
 #ifndef __RTSCENE_H__
 #define __RTSCENE_H__
 
-/*
 class Node {
 public:
     std::vector< Node* > childnodes;
@@ -33,7 +32,7 @@ public:
     std::vector< Model* > models;
     std::vector< glm::mat4 > modeltransforms;
 };
-*/
+
 
 class RTScene {
 public:
@@ -41,7 +40,7 @@ public:
     SurfaceShader* shader;
     // The following are containers of objects serving as the object palettes.
     // The containers store pointers so that they can also store derived class objects.
-    std::map< std::string, Geometry* > geometry;
+    std::map< std::string, RTGeometry* > geometry;
     std::map< std::string, Material* > material;
     std::map< std::string, Model* > model;
     std::map< std::string, Light* > light;
@@ -57,7 +56,7 @@ public:
         node["world"] = new Node;
     }
 
-    void init(void);
+    void init();
     void buildTriangleSoup();
 
     // destructor
@@ -69,7 +68,7 @@ public:
             delete entry.second;
         }
         // geometry
-        for (std::pair<std::string, Geometry*> entry : geometry) {
+        for (std::pair<std::string, RTGeometry*> entry : geometry) {
             delete entry.second;
         }
         // material

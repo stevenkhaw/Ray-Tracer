@@ -22,7 +22,7 @@ that loads an obj file.
 
 #include "RTObj.h"
 
-void Obj::init(const char* filename) {
+void RTObj::init(const char* filename) {
     std::vector< glm::vec3 > temp_vertices, vertices;
     std::vector< glm::vec3 > temp_normals, normals;
     std::vector< unsigned int > temp_vertexIndices, indices;

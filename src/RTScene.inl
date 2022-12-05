@@ -6,12 +6,12 @@ Scene.inl contains the definition of the scene graph
 #include "RTObj.h"
 
 using namespace glm;
-void RTScene::init(void) {
+void RTScene::init() {
     // Create a geometry palette
-    geometry["RTRTCube"] = new RTCube;
+    geometry["RTCube"] = new RTCube;
     geometry["teapot"] = new RTObj;
     geometry["bunny"] = new RTObj;
-    geometry["RTRTRTCube"]->init();
+    geometry["RTCube"]->init();
     geometry["teapot"]->init("models/teapot.obj");
     geometry["bunny"]->init("models/bunny.obj");
 
