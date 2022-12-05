@@ -48,7 +48,7 @@ void initialize(void){
     scene.init();
 
     // Initialize image
-    image.init();
+    //image.init();
 
     // fill image with raytracer rgb
     RayTracer::Raytrace(scene.camera, &scene, image);

@@ -14,10 +14,9 @@
   "ExpandedNodes": [
     "",
     "\\include",
-    "\\models",
-    "\\shaders",
+    "\\out",
     "\\src"
   ],
-  "SelectedNode": "\\include\\Intersection.h",
+  "SelectedNode": "\\CMakeLists.txt",
   "PreviewInSolutionExplorer": false
 }

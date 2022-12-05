@@ -8,7 +8,7 @@ that loads an obj file.
 #ifndef __OBJ_H__
 #define __OBJ_H__
 
-class Obj : public RTGeometry {
+class RTObj : public RTGeometry {
 public:
 
     void init(const char* filename) {
