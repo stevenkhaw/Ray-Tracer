@@ -46,9 +46,10 @@ void initialize(void){
     
     // Initialize scene
     scene.init();
+    scene.buildTriangleSoup();
 
     // Initialize image
-    //image.init();
+    image.init();
 
     // fill image with raytracer rgb
     RayTracer::Raytrace(scene.camera, &scene, image);
@@ -59,11 +60,9 @@ void initialize(void){
 
 void display(void){
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    
-    scene.buildTriangleSoup();
-    //image.draw();
-    
+    image.draw();
     glutSwapBuffers();
+
     glFlush();
 }
 
@@ -100,7 +99,6 @@ void keyboard(unsigned char key, int x, int y){
             glutPostRedisplay();
             break;
         case 'l':
-            scene.shader -> enablelighting = !(scene.shader -> enablelighting);
             glutPostRedisplay();
             break;
         case ' ':

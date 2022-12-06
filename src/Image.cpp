@@ -1,7 +1,8 @@
 #include "Image.h"
 
 void Image::init() {
-    this->pixels = std::vector<glm::vec3>(this->width * this->height);
+    this->pixels = std::vector < std::vector< glm::vec3 > >(height, std::vector < glm::vec3 >(width));
+
     glGenFramebuffers(1, &fbo);
     glGenTextures(1, &tbo);
     //testAddColor();
@@ -28,6 +29,6 @@ void Image::testAddColor() {
     glm::vec3 GL_RBG_RED = glm::vec3(1.0f, 0.0f, 0.0f);
     
     for (int i = 0; i < width * height; i++) {
-        this->pixels[i] = GL_RBG_RED;
+        this->pixels[i][i] = GL_RBG_RED;
     }
 }

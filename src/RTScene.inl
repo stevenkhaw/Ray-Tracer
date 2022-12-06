@@ -8,12 +8,12 @@ Scene.inl contains the definition of the scene graph
 using namespace glm;
 void RTScene::init() {
     // Create a geometry palette
-    geometry["RTCube"] = new RTCube;
+    geometry["Cube"] = new RTCube;
     geometry["teapot"] = new RTObj;
     geometry["bunny"] = new RTObj;
-    geometry["RTCube"]->init();
-    geometry["teapot"]->init("models/teapot.obj");
-    geometry["bunny"]->init("models/bunny.obj");
+    geometry["Cube"]->init();
+    //geometry["teapot"]->init("models/teapot.obj");
+    //geometry["bunny"]->init("models/bunny.obj");
 
     // Create a material palette
     material["wood"] = new Material;
@@ -48,20 +48,24 @@ void RTScene::init() {
     material["bulb"]->shininess = 200.0f;
 
     // Create a model palette
+    /*
     model["teapot1"] = new Model;
     model["teapot1"]->geometry = geometry["teapot"];
     model["teapot1"]->material = material["silver"];
     model["teapot2"] = new Model;
     model["teapot2"]->geometry = geometry["teapot"];
     model["teapot2"]->material = material["ceramic"];
+    */
     model["table piece"] = new Model;
-    model["table piece"]->geometry = geometry["RTRTRTCube"];
+    model["table piece"]->geometry = geometry["Cube"];
     model["table piece"]->material = material["wood"];
+    /*
     model["bunny"] = new Model;
     model["bunny"]->geometry = geometry["bunny"];
     model["bunny"]->material = material["turquoise"];
+    */
     model["bulb"] = new Model;
-    model["bulb"]->geometry = geometry["RTRTRTCube"];
+    model["bulb"]->geometry = geometry["Cube"];
     model["bulb"]->material = material["bulb"];
 
     // Create a light palette
@@ -77,9 +81,9 @@ void RTScene::init() {
     node["table"] = new Node;
     node["table top"] = new Node;
     node["table leg"] = new Node;
-    node["teapot1"] = new Node;
-    node["teapot2"] = new Node;
-    node["bunny"] = new Node;
+    //node["teapot1"] = new Node;
+    //node["teapot2"] = new Node;
+    //node["bunny"] = new Node;
 
 
     node["table"]->childnodes.push_back(node["table top"]);
@@ -98,23 +102,23 @@ void RTScene::init() {
 
     node["table top"]->models.push_back(model["table piece"]);
     node["table top"]->modeltransforms.push_back(translate(vec3(0.0f, -0.1f, 0.0f)) * scale(vec3(2.0f, 0.2f, 1.0f)));
-    node["table top"]->childnodes.push_back(node["teapot1"]);
-    node["table top"]->childtransforms.push_back(translate(vec3(-0.5f, 0.0f, 0.0f)));
-    node["table top"]->childnodes.push_back(node["teapot2"]);
-    node["table top"]->childtransforms.push_back(translate(vec3(0.5f, 0.0f, 0.0f)) * rotate(-120.0f * float(M_PI) / 180.0f, vec3(0.0f, 1.0f, 0.0f)));
+    //node["table top"]->childnodes.push_back(node["teapot1"]);
+    //node["table top"]->childtransforms.push_back(translate(vec3(-0.5f, 0.0f, 0.0f)));
+    //node["table top"]->childnodes.push_back(node["teapot2"]);
+    //node["table top"]->childtransforms.push_back(translate(vec3(0.5f, 0.0f, 0.0f)) * rotate(-120.0f * float(M_PI) / 180.0f, vec3(0.0f, 1.0f, 0.0f)));
 
-    node["teapot1"]->models.push_back(model["teapot1"]);
-    node["teapot1"]->modeltransforms.push_back(scale(vec3(0.5f)));
-    node["teapot2"]->models.push_back(model["teapot2"]);
-    node["teapot2"]->modeltransforms.push_back(scale(vec3(1.0f, 1.5f, 1.0f)) * scale(vec3(0.5f)));
+    //node["teapot1"]->models.push_back(model["teapot1"]);
+    //node["teapot1"]->modeltransforms.push_back(scale(vec3(0.5f)));
+    //node["teapot2"]->models.push_back(model["teapot2"]);
+    //node["teapot2"]->modeltransforms.push_back(scale(vec3(1.0f, 1.5f, 1.0f)) * scale(vec3(0.5f)));
 
     node["bunny"]->models.push_back(model["bunny"]);
     node["bunny"]->modeltransforms.push_back(scale(vec3(0.8f)) * translate(vec3(0.0f, 1.0f, 0.0f)));
 
-    node["world"]->childnodes.push_back(node["table"]);
-    node["world"]->childtransforms.push_back(mat4(1.0f));
-    node["world"]->childnodes.push_back(node["bunny"]);
-    node["world"]->childtransforms.push_back(translate(vec3(-1.8f, 0.0f, 0.0f)) * rotate(90.0f * float(M_PI) / 180.0f, vec3(0.0f, 1.0f, 0.0f)));
+    //node["world"]->childnodes.push_back(node["table"]);
+    //node["world"]->childtransforms.push_back(mat4(1.0f));
+    //node["world"]->childnodes.push_back(node["bunny"]);
+    //node["world"]->childtransforms.push_back(translate(vec3(-1.8f, 0.0f, 0.0f)) * rotate(90.0f * float(M_PI) / 180.0f, vec3(0.0f, 1.0f, 0.0f)));
     node["world"]->models.push_back(model["bulb"]);
     node["world"]->modeltransforms.push_back(translate(vec3(0.0f, 2.0f, 0.0f)) * scale(vec3(0.1f)));
 
@@ -124,11 +128,4 @@ void RTScene::init() {
     camera->eye_default = vec3(0.0f, 1.0f, 5.0f);
     camera->up_default = vec3(0.0f, 1.0f, 0.0f);
     camera->reset();
-
-    // Initialize shader
-    shader = new SurfaceShader;
-    shader->read_source("shaders/projective.vert", "shaders/lighting.frag");
-    shader->compile();
-    glUseProgram(shader->program);
-    shader->initUniforms();
 }

@@ -21,7 +21,8 @@ namespace RayTracer {
 
 		glm::vec3 d = glm::normalize(alpha * a * glm::tan(cam->fovy / 2) * u + beta * glm::tan(cam->fovy / 2) * v - w);
 
-		return *(new Ray(cam->eye, d));
+		
+		return Ray(cam->eye, d);
 	}
 
 	Intersection Intersect(Ray* ray, Triangle* triangle) {
@@ -53,22 +54,23 @@ namespace RayTracer {
 	}
 
 	Intersection Intersect(Ray* ray, RTScene* scene) {
-		float mindist = INFINITY;
-		Intersection hit;
+		Intersection* hit = &Intersection();
+		hit->triangle = nullptr;
+		hit->dist = INFINITY;
+		
 
 		for (int i = 0; i < scene->triangle_soup.size(); i++) { // Find closest intersection; test all objects
 
 			Triangle* currTriangle = scene->triangle_soup[i];
 
-			Intersection hit_temp = Intersect(ray, currTriangle);
+			Intersection *hit_temp = &Intersect(ray, currTriangle);
 
-			if (hit_temp.dist < mindist) { // closer than previous hit
-				mindist = hit_temp.dist;
+			if (hit_temp->dist < hit->dist) { // closer than previous hit
 				hit = hit_temp;
 			}
 		}
 
-		return hit;
+		return *hit;
 	}
 
 	glm::vec3 FindColor(Intersection* hit, RTScene* scene, int recursion_depth) {
@@ -101,6 +103,12 @@ namespace RayTracer {
 
 		vec3 rayToLight =
 		*/
+
+		if (hit->triangle == nullptr) {
+			std::cout << "MAKING GRAY" << std::endl;
+			return glm::vec3(0.3f);
+		}
+		std::cout << "NOT GRAY" << std::endl;
 
 
 		//lets convert everything into our camera coordinates
@@ -156,7 +164,7 @@ namespace RayTracer {
 			for (int i = 0; i < w; i++) {
 				Ray ray = RayThruPixel(cam, i, j, w, h);
 				Intersection hit = Intersect(&ray, scene);
-				image.pixels[i + j] = FindColor(&hit, scene, 0);
+				image.pixels[j][i] = FindColor(&hit, scene, 0);
 			}
 		}
 	}

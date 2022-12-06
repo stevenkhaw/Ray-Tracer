@@ -16,7 +16,7 @@ class Image {
 public:
     int width;
     int height;
-    std::vector<glm::vec3> pixels; // RGB colors
+    std::vector < std::vector < glm::vec3> > pixels; // RGB colors
 
     void init();
     void draw();

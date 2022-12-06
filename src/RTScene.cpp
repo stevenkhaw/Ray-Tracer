@@ -13,18 +13,7 @@ using namespace glm;
 void RTScene::buildTriangleSoup() {
     // Pre-draw sequence: assign uniforms that are the same for all Geometry::draw call.  These uniforms include the camera view, proj, and the lights.  These uniform do not include modelview and material parameters.
     camera->computeMatrices();
-    shader->view = camera->view;
-    shader->projection = camera->proj;
-    shader->nlights = light.size();
-    shader->lightpositions.resize(shader->nlights);
-    shader->lightcolors.resize(shader->nlights);
-    int count = 0;
-    for (std::pair<std::string, Light*> entry : light) {
-        shader->lightpositions[count] = (entry.second)->position;
-        shader->lightcolors[count] = (entry.second)->color;
-        count++;
-    }
-
+    
     // Define stacks for depth-first search (DFS)
     std::stack < Node* > dfs_stack;
     std::stack < mat4 >  matrix_stack;
@@ -62,7 +51,12 @@ void RTScene::buildTriangleSoup() {
         for (int i = 0; i < cur->models.size(); i++) {
             mat4 modelview = cur_VM * (cur->modeltransforms[i]);
 
+            mat3 smallModelview = mat3(modelview[0][0], modelview[1][0], modelview[2][0],
+                modelview[0][1], modelview[1][1], modelview[2][1],
+                modelview[0][2], modelview[1][2], modelview[2][2]);
+
             for (int j = 0; j < cur->models[i]->geometry->count; j++) {
+                std::cout <<j<< std::endl;
                 Triangle* currTriangle = &(cur->models[i]->geometry->elements[j]);
 
                 for (int k = 0; k < 3; k++) {
@@ -71,7 +65,7 @@ void RTScene::buildTriangleSoup() {
                     vec3 smallBig = vec3(big[0], big[1], big[2]);
                     currTriangle->P[k] = smallBig / (modelview * vec4(currTriangle->P[k], 1.0f)).w;
                     // 
-                    currTriangle->N[k] = normalize(transpose(inverse(mat3(modelview))) * currTriangle->N[k]);
+                    currTriangle->N[k] = normalize(transpose(inverse(smallModelview)) * currTriangle->N[k]);
                 }
 
                 currTriangle->material = (cur->models[i])->material;
