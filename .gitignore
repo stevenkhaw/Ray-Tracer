@@ -144,3 +144,10 @@ out/build/x64-debug/Testing/Temporary/LastTest.log
 .vs/cse167_final/v17/Browse.VC.db
 .vs/slnx.sqlite
 .vs/cse167_final/FileContentIndex/7d8e1d6c-dcee-456b-ad7e-f96b06bd2e60.vsidx
+.vs/cse167_final/v17/Browse.VC.db
+.vs/ProjectSettings.json
+.vs/slnx.sqlite
+out/build/x64-debug/build.ninja
+out/build/x64-debug/CMakeFiles/CMakeOutput.log
+out/build/x64-debug/CMakeFiles/ShowIncludes/main.obj
+out/build/x64-debug/Testing/Temporary/LastTest.log
