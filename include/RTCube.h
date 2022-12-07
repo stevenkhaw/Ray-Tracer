@@ -57,8 +57,8 @@ public:
 			temp.P.push_back(glm::vec3(positions[indices[i+2]][0], positions[indices[i+2]][1], positions[indices[i+2]][2]));
 
 			temp.N.push_back(glm::vec3(normals[indices[i]][0], normals[indices[i]][1], normals[indices[i]][2]));
-			temp.N.push_back(glm::vec3(normals[indices[i]][0], normals[indices[i+1]][1], normals[indices[i+1]][2]));
-			temp.N.push_back(glm::vec3(normals[indices[i]][0], normals[indices[i+2]][1], normals[indices[i+2]][2]));
+			temp.N.push_back(glm::vec3(normals[indices[i+1]][0], normals[indices[i+1]][1], normals[indices[i+1]][2]));
+			temp.N.push_back(glm::vec3(normals[indices[i+2]][0], normals[indices[i+2]][1], normals[indices[i+2]][2]));
 
             count++;
 

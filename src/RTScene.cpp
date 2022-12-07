@@ -57,10 +57,15 @@ void RTScene::buildTriangleSoup() {
 
             for (int j = 0; j < cur->models[i]->geometry->count; j++) {
                 std::cout <<j<< std::endl;
-                Triangle* currTriangle = &(cur->models[i]->geometry->elements[j]);
+                Triangle* currTriangle = new Triangle();
+                currTriangle->N = cur->models[i]->geometry->elements[j].N;
+                currTriangle->P = cur->models[i]->geometry->elements[j].P;
+                currTriangle->material = (cur->models[i])->material;
+
 
                 for (int k = 0; k < 3; k++) {
                     //                         cast as vec4, transform                  homogenize
+
                     vec4 big = (modelview * vec4(currTriangle->P[k], 1.0f));
                     vec3 smallBig = vec3(big[0], big[1], big[2]);
                     currTriangle->P[k] = smallBig / (modelview * vec4(currTriangle->P[k], 1.0f)).w;
@@ -68,7 +73,6 @@ void RTScene::buildTriangleSoup() {
                     currTriangle->N[k] = normalize(transpose(inverse(smallModelview)) * currTriangle->N[k]);
                 }
 
-                currTriangle->material = (cur->models[i])->material;
 
                 this->triangle_soup.push_back(currTriangle);
             }

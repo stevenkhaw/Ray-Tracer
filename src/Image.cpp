@@ -9,10 +9,19 @@ void Image::init() {
 }
 
 void Image::draw() {
+    int w = width; int h = height;
+    std::vector<glm::vec3> pix;
+
+    for (int j = 0; j < h; j++) {
+        for (int i = 0; i < w; i++) {
+            pix.push_back(pixels[j][i]);
+        }
+    }
+
     glBindTexture(GL_TEXTURE_2D, tbo);
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, // load texture
-        0, GL_RGB, GL_FLOAT, &pixels[0][0]);
+        0, GL_RGB, GL_FLOAT, &pix[0][0]);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
 
