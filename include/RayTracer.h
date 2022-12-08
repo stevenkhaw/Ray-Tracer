@@ -7,6 +7,7 @@
 #include "Ray.h"
 #include "Intersection.h"
 #include "Image.h"
+#include <math.h>
 
 namespace RayTracer {
 	Ray RayThruPixel(Camera* cam, int i, int j, int width, int height) {
@@ -19,7 +20,9 @@ namespace RayTracer {
 		glm::vec3 u = glm::normalize(glm::cross(cam->up, w));
 		glm::vec3 v = glm::cross(w, u);
 
-		glm::vec3 d = glm::normalize(alpha * a * glm::tan(cam->fovy / 2) * u + beta * glm::tan(cam->fovy / 2) * v - w);
+		float fovyRad = cam->fovy * M_PI / 180;
+
+		glm::vec3 d = glm::normalize(alpha * a * glm::tan(fovyRad / 2) * u + beta * glm::tan(fovyRad / 2) * v - w);
 
 		
 		return Ray(cam->eye, d);
@@ -57,7 +60,6 @@ namespace RayTracer {
 		Intersection hit = Intersection();
 		hit.triangle = nullptr;
 		hit.dist = INFINITY;
-		
 
 		for (int i = 0; i < scene->triangle_soup.size(); i++) { // Find closest intersection; test all objects
 
@@ -77,123 +79,74 @@ namespace RayTracer {
 
 	glm::vec3 FindColor(Intersection* hit, RTScene* scene, int recursion_depth) {
 
+		
 		if (hit->triangle == nullptr) {
-			//std::cout << "MAKING GRAY" << std::endl;
-			return glm::vec3(0.3f);
+			//return glm::vec3(0.3f); // gray
+			return glm::vec3(0.18, 0.25, 0.325); // grayish blue
 		}
 
-		if (recursion_depth != 0) {
-			int recursion = recursion_depth;
+		// color 
+		glm::vec3 color = hit->triangle->material->emision;
 
-			if (recursion_depth > 6) {
-				recursion = 6;
-			}
+		// specular
+		glm::vec3 spec = hit->triangle->material->specular;
 
-			// A vague attempt at recursive lighting 
-			std::map< std::string, Light* > lights = scene->light;
+		// ambient
+		glm::vec3 amb = hit->triangle->material->ambient;
 
-			glm::vec4 currDiffuse = hit->triangle->material->diffuse;
+		// diffuse
+		glm::vec3 diff = hit->triangle->material->diffuse;
+
+		// normal vector
+		glm::vec3 n = glm::normalize(hit->N);
+
+		// ref to map of lights
+		std::map< std::string, Light* > lights = scene->light;
+
+		// for each light l in scene
+		// light = it->second
+		for (auto it = lights.begin(); it != lights.end(); it++) {
 			
-			// color
-			glm::vec3 color = glm::vec3(0.0f);
+			// reflection
+			if (recursion_depth > 0) {
+				if (recursion_depth > 5) recursion_depth = 5;
 
-			// normal vector
-			glm::vec3 n = glm::normalize(hit->N);
+				glm::vec3 v = normalize(hit->V);
+				glm::vec3 newDirection = glm::normalize(2.0f * glm::dot(n,v) * n) - v;
+				Ray newRay = Ray(hit->P + 0.1f * hit->N, newDirection);
+				Intersection newHit = Intersect(&newRay, scene);
 
-			for (auto it = lights.begin(); it != lights.end(); it++) {
-
-				glm::vec4 target = glm::vec4(scene->camera->target, 1.0f);  //origin
-				glm::vec3 smallTarget = glm::vec3(scene->camera->target);
-
-				glm::vec4 lgb = scene->camera->view * it->second->position; //light position
-				glm::vec3 smallLGB = glm::vec3(lgb[0], lgb[1], lgb[2]); //light position, but as a vec3
-
-				glm::vec3 lj = glm::normalize(target[3] * smallLGB - lgb[3] * smallTarget); //direction to light
-				float innerCalc = glm::max(glm::dot(n, lj), 0.0f);
-
-				// visibility
-				int visibility = 0;
-				
-				// Generate a ray from the intersect point to the light
-				Ray newLightRay = Ray(hit->P + 0.1f * hit->N, it->second->position - glm::vec4(hit->P, 1.0f));
-				Intersection hitBlock = Intersect(&newLightRay, scene);
-
-				if (hitBlock.triangle == nullptr) {
-					visibility = 1;
+				// in case the reflection doesnt hit anything
+				if (newHit.triangle == nullptr) {
+					return color = FindColor(hit, scene, 0);
 				}
 
-				innerCalc *= visibility;
-	
-				glm::vec4 result = (currDiffuse * it->second->color) * innerCalc;
-				glm::vec3 smallResult = glm::vec3(result[0], result[1], result[2]);
-				//color += smallResult / result.w;
-				color += smallResult;
-			}
-			
-			//now recursion
-			glm::vec4 currSpecular = hit->triangle->material->specular;
-			glm::vec3 smallSpec = glm::vec3(currSpecular[0], currSpecular[1], currSpecular[2]);
-			
-			// this is our reflected ray
-			glm::vec3 v = normalize(hit->V);
-			glm::vec3 newDirection = glm::normalize(2.0f * (n * v) * n) - v;
-			Ray newRay = Ray(hit->P , newDirection);
-			Intersection newHit = Intersect(&newRay, scene);
-			
-			// in case the reflection doesnt hit anything
-			if (newHit.triangle == nullptr) {
-				return color = FindColor(hit, scene, 0);
+				color += spec * FindColor(&newHit, scene, recursion_depth - 1);
 			}
 
-			//color += smallSpec / currSpecular.w * FindColor(&newHit, scene, recursion - 1);
-			color += smallSpec * FindColor(&newHit, scene, recursion - 1);
-			return color;
-		} else {
-			
-			//lets convert everything into our camera coordinates
-			glm::vec3 lj;
-			glm::vec3 camPos = scene->camera->eye;
-			//to get vector towards camera, we do xcamPos = ((0,0,0,1) - camPos).xyz  this vector then needs to be normalized
-			glm::vec3 v = glm::normalize(scene->camera->target - camPos);
-			//normalize... this is probably the source of issues because we really only need to invert and transpose over the inner 3x3 matrix
-			glm::vec3 n = glm::normalize(hit->N);
-			//vec3 n = normalize(transpose(inverse(mat3(modelview))) * normalize(normal));
+			// shadow
+			glm::vec4 target = glm::vec4(scene->camera->target, 1.0f);  //origin
+			glm::vec3 smallTarget = glm::vec3(scene->camera->target);
 
+			glm::vec4 lgb = scene->camera->view * it->second->position; //light position
+			glm::vec3 smallLGB = glm::vec3(lgb[0], lgb[1], lgb[2]); //light position, but as a vec3
 
-			//we are going to do a loop, where each iteration goes over one light
-			glm::vec4 total = glm::vec4(0, 0, 0, 0);
-			glm::vec4 iterationSum;
+			// Generate a ray from the intersect point to the light
+			Ray newLightRay = Ray(hit->P + 0.1f * hit->N, it->second->position - glm::vec4(hit->P, 1.0f));
+			Intersection hitBlock = Intersect(&newLightRay, scene);
 
-			std::map< std::string, Light* > lights = scene->light;
+			float manDist = glm::length(smallLGB - newLightRay.p0);
+			float hitDist = hitBlock.dist;
 
-			for (auto it = lights.begin(); it != lights.end(); it++) {
-				glm::vec4 target = glm::vec4(scene->camera->target, 1.0f);  //origin
-				glm::vec3 smallTarget = glm::vec3(scene->camera->target);
-				glm::vec4 lgb = scene->camera->view * it->second->position; //light position
-				glm::vec3 smallLGB = glm::vec3(lgb[0], lgb[1], lgb[2]); //light position, but as a vec3
-
-				lj = glm::normalize(target[3] * smallLGB - lgb[3] * smallTarget); //direction to light
-				iterationSum = glm::vec4(0, 0, 0, 0);
-
-				//ambient
-				iterationSum += hit->triangle->material->ambient;
-
-				//diffuse
-				iterationSum += hit->triangle->material->diffuse * glm::max(glm::dot(n, lj), 0.0f);
-
-				//specular
-				iterationSum += hit->triangle->material->specular * pow(glm::max(glm::dot(n, glm::normalize(v + lj)), 0.0f), hit->triangle->material->shininess);
-
-				//all together, we multiply this by the light color
-				total += iterationSum * it->second->position;
+			if (hitDist < manDist) {
+				continue;
 			}
+			else {
+				color += amb + diff;
+			}
+		}
 
-			total += hit->triangle->material->emision;
-
-			glm::vec3 smallTotal = glm::vec3(total[0], total[1], total[2]);
-
-			return smallTotal; // vec4
-		}		
+		return color;
 	}
 
 	void Raytrace(Camera* cam, RTScene* scene, Image& image) {
@@ -204,9 +157,10 @@ namespace RayTracer {
 			for (int i = 0; i < w; i++) {
 				Ray ray = RayThruPixel(cam, i, j, w, h);
 				Intersection hit = Intersect(&ray, scene);
-				image.pixels[j][i] = FindColor(&hit, scene, 6);
+				image.pixels[h - j - 1][i] = FindColor(&hit, scene, 3);
 			}
-			std::cout << j << std::endl; 
+
+			std::cout << j << std:: endl;
 		}
 	}
 };

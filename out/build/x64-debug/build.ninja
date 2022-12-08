@@ -65,14 +65,6 @@ build CMakeFiles\ModelViewer.dir\src\Image.cpp.obj: CXX_COMPILER__ModelViewer_De
   TARGET_COMPILE_PDB = CMakeFiles\ModelViewer.dir\
   TARGET_PDB = ModelViewer.pdb
 
-build CMakeFiles\ModelViewer.dir\src\Obj.cpp.obj: CXX_COMPILER__ModelViewer_Debug C$:\Users\swkha\Documents\GitHub\cse167_final\src\Obj.cpp || cmake_object_order_depends_target_ModelViewer
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
-  INCLUDES = -IC:\Users\swkha\Documents\GitHub\cse167_final\include
-  OBJECT_DIR = CMakeFiles\ModelViewer.dir
-  OBJECT_FILE_DIR = CMakeFiles\ModelViewer.dir\src
-  TARGET_COMPILE_PDB = CMakeFiles\ModelViewer.dir\
-  TARGET_PDB = ModelViewer.pdb
-
 build CMakeFiles\ModelViewer.dir\src\RTScene.cpp.obj: CXX_COMPILER__ModelViewer_Debug C$:\Users\swkha\Documents\GitHub\cse167_final\src\RTScene.cpp || cmake_object_order_depends_target_ModelViewer
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   INCLUDES = -IC:\Users\swkha\Documents\GitHub\cse167_final\include
@@ -105,7 +97,7 @@ build CMakeFiles\ModelViewer.dir\src\main.cpp.obj: CXX_COMPILER__ModelViewer_Deb
 #############################################
 # Link the executable ModelViewer.exe
 
-build ModelViewer.exe: CXX_EXECUTABLE_LINKER__ModelViewer_Debug CMakeFiles\ModelViewer.dir\src\Camera.cpp.obj CMakeFiles\ModelViewer.dir\src\Image.cpp.obj CMakeFiles\ModelViewer.dir\src\Obj.cpp.obj CMakeFiles\ModelViewer.dir\src\RTScene.cpp.obj CMakeFiles\ModelViewer.dir\src\Shader.cpp.obj CMakeFiles\ModelViewer.dir\src\main.cpp.obj || CopyModels CopyShaders
+build ModelViewer.exe: CXX_EXECUTABLE_LINKER__ModelViewer_Debug CMakeFiles\ModelViewer.dir\src\Camera.cpp.obj CMakeFiles\ModelViewer.dir\src\Image.cpp.obj CMakeFiles\ModelViewer.dir\src\RTScene.cpp.obj CMakeFiles\ModelViewer.dir\src\Shader.cpp.obj CMakeFiles\ModelViewer.dir\src\main.cpp.obj || CopyModels CopyShaders
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = glew32.lib  freeglut.lib  FreeImage.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
